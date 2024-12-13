@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+## Publishing NPM Packages on GitHub
+This guide documents the steps to publish an NPM package on GitHub, including creating tokens, updating package.json, and resolving issues like GitHub Push Protection.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Steps to Publish on GitHub Packages
 
-## Available Scripts
+1. Steps to Create a Token:
 
-In the project directory, you can run:
+Go to GitHub Token Settings.
+Click Generate new token (classic) or Create a new token (if using the fine-grained access option).
+Select the permissions mentioned above.
+Copy the generated token and store it securely
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Set Up Authentication To publish an NPM package to GitHub, you need a Personal Access Token (PAT) with the following permissions:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+write:packages
+read:packages
+delete:packages (if you want to delete packages later)
+admin:repo_hook (if your repository is private)
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Update .npmrc File
+To configure NPM to authenticate with GitHub:
 
-### `npm run build`
+Create a .npmrc file in the root of your project (or globally).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Add the following line:
+@YOUR_USER_NAME_GITHUB:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_PERSONAL_ACCESS_TOKEN
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Important:** Add `.npmrc` to `.gitignore` to avoid accidentally pushing it to the repository.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 3. **Update `package.json`**
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Set the name field to include your GitHub username:
+  "name": "@username/example-package",            
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Add the `repository` field to point to your GitHub repository:
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/example-repo.git"
+  },
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Add the publishConfig field to specify the registry:
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Publishing the Package
+Login to NPM using the following command:
 
-## Learn More
+1. npm login --registry=https://npm.pkg.github.com/
+Enter your GitHub username, email, and the token as the password.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. If you are logged in to the specified registry, it will display your GitHub username.
+npm whoami --registry=https://npm.pkg.github.com
+If you are not logged in, you'll see an error then try again login
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. Build the Package Before publishing, ensure your package is built:
+npm run build
 
-### Code Splitting
+2. Publish the package:
+npm publish 
+# If needed, explicitly specify the registry:
+npm publish --registry=https://npm.pkg.github.com
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. Verify the package is available on GitHub by navigating to:
+https://github.com/username?tab=packages
 
-### Analyzing the Bundle Size
+4. The npm show command can be used to retrieve information about your package hosted on GitHub Packages. Here’s how you can use it effectively:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+npm show @username/hello-component --registry=https://npm.pkg.github.com
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### Note ****
+If your .npmrc file already includes the GitHub token, you can skip the login step and directly build and publish the package.
