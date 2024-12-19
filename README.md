@@ -1,5 +1,5 @@
 ## Publishing NPM Packages on GitHub
-This guide documents the steps to publish an NPM package on GitHub, including creating tokens, updating package.json, and resolving issues like GitHub Push Protection.
+ This guide documents the steps to publish an NPM package on GitHub, including creating tokens, updating package.json, and resolving issues like GitHub Push Protection. Protytpe trial, not used, this is for training purpose only.
 
 ## Steps to Publish on GitHub Packages
 
